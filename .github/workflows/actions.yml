@@ -31,4 +31,10 @@ jobs:
       - name: Generate Coverage Report
         run: mvn jacoco:report
         working-directory: ./back
+
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: jacoco-coverage-report
+          path: ./back/target/site/jacoco/
         

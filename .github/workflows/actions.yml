@@ -38,6 +38,18 @@ jobs:
           name: jacoco-coverage-report
           path: ./back/target/site/jacoco/
 
+      - name: Deploy Backend Coverage to GitHub Pages
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git checkout gh-pages || git checkout --orphan gh-pages
+          mkdir -p backend/coverage-report
+          cp -r ./back/target/site/jacoco/* backend/coverage-report
+          git add backend/coverage-report/*
+          git commit -m "Update backend coverage report"
+          git push --force "https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages
+        if: success()
+
   frontend:
     runs-on: ubuntu-latest
 
@@ -59,3 +71,15 @@ jobs:
         with:
           name: frontend-coverage-report
           path: ./front/coverage/bobapp
+
+      - name: Deploy Frontend Coverage to GitHub Pages
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git checkout gh-pages
+          mkdir -p frontend/coverage-report
+          cp -r ./front/coverage/* frontend/coverage-report
+          git add frontend/coverage-report/*
+          git commit -m "Update frontend coverage report"
+          git push --force "https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages
+        if: success()

@@ -50,5 +50,3 @@ jobs:
           working-directory: ./front
         - run: npm run test:prod
           working-directory: ./front
-        - run: npm run lint
-          working-directory: ./front

@@ -86,7 +86,7 @@ jobs:
           # Create the target directory if it doesn't exist
           mkdir -p frontend/coverage-report
           
-          cp -r ./front/coverage/* frontend/coverage-report
+          cp -r ./front/coverage/bobapp/* frontend/coverage-report
           git add frontend/coverage-report/*
           git commit -m "Update frontend coverage report" || echo "No changes to commit"
           git push --force "https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages

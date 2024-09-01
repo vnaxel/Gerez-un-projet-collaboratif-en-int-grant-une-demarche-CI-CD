@@ -38,12 +38,6 @@ jobs:
           name: jacoco-coverage-report
           path: ./back/target/site/jacoco/
 
-      - name: Upload Test Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: jacoco-test-report
-          path: ./back/target/site/jacoco/index.html
-
   frontend:
     runs-on: ubuntu-latest
 
@@ -65,9 +59,3 @@ jobs:
         with:
           name: frontend-coverage-report
           path: ./front/coverage/bobapp
-          
-      - name: Upload Test Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-test-report
-          path: ./front/coverage/bobapp/index.html

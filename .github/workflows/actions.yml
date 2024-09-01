@@ -42,17 +42,8 @@ jobs:
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
-          
-          # Checkout gh-pages branch, or create it if it doesn't exist
-          if git show-ref --quiet refs/heads/gh-pages; then
-            git checkout gh-pages
-            git pull origin gh-pages  # Pull existing content to avoid overwriting
-          else
-            git checkout --orphan gh-pages
-            git rm -rf .
-          fi
-          
-          mkdir -p backend/coverage-report
+          git checkout gh-pages
+          git pull origin gh-pages  # Pull existing content to avoid overwriting
           cp -r ./back/target/site/jacoco/* backend/coverage-report
           git add backend/coverage-report/*
           git commit -m "Update backend coverage report"
@@ -85,17 +76,8 @@ jobs:
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
-          
-          # Checkout gh-pages branch, or create it if it doesn't exist
-          if git show-ref --quiet refs/heads/gh-pages; then
-            git checkout gh-pages
-            git pull origin gh-pages  # Pull existing content to avoid overwriting
-          else
-            git checkout --orphan gh-pages
-            git rm -rf .
-          fi
-          
-          mkdir -p frontend/coverage-report
+          git checkout gh-pages
+          git pull origin gh-pages  # Pull existing content to avoid overwriting
           cp -r ./front/coverage/* frontend/coverage-report
           git add frontend/coverage-report/*
           git commit -m "Update frontend coverage report"

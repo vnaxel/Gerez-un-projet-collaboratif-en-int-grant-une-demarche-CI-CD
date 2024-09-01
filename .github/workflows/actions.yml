@@ -76,7 +76,7 @@ jobs:
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
-          git checkout gh-pages
+          git checkout gh-pages || git checkout --orphan gh-pages
           mkdir -p frontend/coverage-report
           cp -r ./front/coverage/* frontend/coverage-report
           git add frontend/coverage-report/*

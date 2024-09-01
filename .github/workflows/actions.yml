@@ -40,17 +40,12 @@ jobs:
 
   frontend:
       runs-on: ubuntu-latest
-      
-      strategy:
-        matrix:
-          node-version: [10.x]
   
       steps:
-        - uses: actions/checkout@v2
-        - name: Use Node.js ${{ matrix.node-version }}
-          uses: actions/setup-node@v1
-          with:
-            node-version: ${{ matrix.node-version }}
+        - uses: actions/checkout@v3
+        - name: Use Node.js
+          uses: actions/setup-node@v4
+
         - run: npm ci
         - run: npm run test:prod
         - run: npm run lint

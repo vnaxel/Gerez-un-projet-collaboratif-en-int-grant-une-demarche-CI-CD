@@ -38,15 +38,36 @@ jobs:
           name: jacoco-coverage-report
           path: ./back/target/site/jacoco/
 
-  frontend:
-      runs-on: ubuntu-latest
-  
-      steps:
-        - uses: actions/checkout@v3
-        - name: Use Node.js
-          uses: actions/setup-node@v4
+      - name: Upload Test Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-test-report
+          path: ./back/target/site/jacoco/index.html
 
-        - run: npm ci
-          working-directory: ./front
-        - run: npm run test:prod
-          working-directory: ./front
+  frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+
+      - run: npm ci
+        working-directory: ./front
+
+      - run: npm run test:prod -- --code-coverage
+        working-directory: ./front
+
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-coverage-report
+          path: ./front/coverage/bobapp
+          
+      - name: Upload Test Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-test-report
+          path: ./front/coverage/bobapp/index.html

@@ -30,13 +30,6 @@ jobs:
         run: mvn jacoco:report
         working-directory: ./back
 
-      - name: Build and analyze backend with SonarCloud
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed for SonarCloud PR analysis
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=bobapp_bobapp-backend -Dsonar.organization=bobapp
-        working-directory: ./back
-
       - name: Upload Coverage Report
         uses: actions/upload-artifact@v4
         with:
@@ -59,6 +52,13 @@ jobs:
           git commit -m "Update backend coverage report" || echo "No changes to commit"
           git push --force "https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages
         if: success()
+        
+      - name: Build and analyze backend with SonarCloud
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed for SonarCloud PR analysis
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=bobapp_bobapp-backend -Dsonar.organization=bobapp
+        working-directory: ./back
 
   frontend:
     runs-on: ubuntu-latest

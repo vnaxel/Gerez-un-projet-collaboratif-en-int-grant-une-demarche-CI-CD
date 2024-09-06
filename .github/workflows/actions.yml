@@ -75,5 +75,4 @@ jobs:
           args: >
             -Dsonar.projectKey=bobapp_bobapp-frontend
             -Dsonar.organization=bobapp
-            -Dsonar.sources=./front/src/app
-            -Dsonar.javascript.lcov.reportPaths=./front/coverage/bobapp/lcov.info
+            -Dsonar.sources=./front/src/

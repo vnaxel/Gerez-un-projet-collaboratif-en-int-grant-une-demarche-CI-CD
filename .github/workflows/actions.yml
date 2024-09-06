@@ -57,8 +57,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed for SonarCloud PR analysis
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=bobapp_bobapp-backend -Dsonar.organization=bobapp
-        working-directory: ./back
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=bobapp_bobapp-backend -Dsonar.organization=bobapp -Dsonar.sources=./back
 
   frontend:
     runs-on: ubuntu-latest

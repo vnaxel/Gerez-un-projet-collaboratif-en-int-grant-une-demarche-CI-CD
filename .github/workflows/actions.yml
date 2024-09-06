@@ -75,4 +75,5 @@ jobs:
           args: >
             -Dsonar.projectKey=bobapp_bobapp-frontend
             -Dsonar.organization=bobapp
-            -Dsonar.sources=./front/src/
+            -Dsonar.sources=./front
+            -Dsonar.coverage.jacoco.xmlReportPaths=coverage/bobapp

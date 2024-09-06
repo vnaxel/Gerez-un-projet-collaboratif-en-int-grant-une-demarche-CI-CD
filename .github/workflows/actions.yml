@@ -22,12 +22,6 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: Build and analyze backend with SonarCloud
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed for SonarCloud PR analysis
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=bobapp_bobapp-backend -Dsonar.organization=bobapp
-        working-directory: ./back
 
       - name: Build and run tests
         run: mvn clean verify
@@ -44,21 +38,39 @@ jobs:
           path: ./back/target/site/jacoco/
 
       - name: Deploy Backend Coverage to GitHub Pages
+        if: success()
         run: |
+          # Sauvegarder la branche courante
+          CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+          
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
+
+          # Basculer sur la branche gh-pages
           git fetch origin gh-pages || git checkout -b gh-pages
           git checkout gh-pages
           git pull origin gh-pages || echo "No updates to pull"
           
-          # Create the target directory if it doesn't exist
+          # Créer le répertoire cible si nécessaire
           mkdir -p backend/coverage-report
           
+          # Copier le rapport de couverture
           cp -r ./back/target/site/jacoco/* backend/coverage-report
           git add backend/coverage-report/*
           git commit -m "Update backend coverage report" || echo "No changes to commit"
+          
+          # Pousser les changements sur gh-pages
           git push --force "https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages
-        if: success()
+          
+          # Revenir à la branche d'origine
+          git checkout "$CURRENT_BRANCH"
+  
+      - name: Build and analyze backend with SonarCloud
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=bobapp_bobapp-backend -Dsonar.organization=bobapp
+        working-directory: ./back
 
   frontend:
     runs-on: ubuntu-latest
@@ -73,6 +85,43 @@ jobs:
       - run: npm ci
         working-directory: ./front
 
+      - run: npm run test:prod -- --code-coverage
+        working-directory: ./front
+
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-coverage-report
+          path: ./front/coverage/bobapp
+
+      - name: Deploy Frontend Coverage to GitHub Pages
+        if: success()
+        run: |
+          # Sauvegarder la branche courante
+          CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+          
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+
+          # Basculer sur la branche gh-pages
+          git fetch origin gh-pages || git checkout -b gh-pages
+          git checkout gh-pages
+          git pull origin gh-pages || echo "No updates to pull"
+          
+          # Créer le répertoire cible si nécessaire
+          mkdir -p frontend/coverage-report
+          
+          # Copier le rapport de couverture
+          cp -r ./front/coverage/bobapp/* frontend/coverage-report
+          git add frontend/coverage-report/*
+          git commit -m "Update frontend coverage report" || echo "No changes to commit"
+          
+          # Pousser les changements sur gh-pages
+          git push --force "https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages
+          
+          # Revenir à la branche d'origine
+          git checkout "$CURRENT_BRANCH"
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
@@ -84,29 +133,3 @@ jobs:
             -Dsonar.organization=bobapp
             -Dsonar.sources=./front/src/app
             -Dsonar.javascript.lcov.reportPaths=./front/coverage/bobapp/lcov.info
-
-      - run: npm run test:prod -- --code-coverage
-        working-directory: ./front
-
-      - name: Upload Coverage Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-coverage-report
-          path: ./front/coverage/bobapp
-
-      - name: Deploy Frontend Coverage to GitHub Pages
-        run: |
-          git config --global user.email "actions@github.com"
-          git config --global user.name "GitHub Actions"
-          git fetch origin gh-pages || git checkout -b gh-pages
-          git checkout gh-pages
-          git pull origin gh-pages || echo "No updates to pull"
-          
-          # Create the target directory if it doesn't exist
-          mkdir -p frontend/coverage-report
-          
-          cp -r ./front/coverage/bobapp/* frontend/coverage-report
-          git add frontend/coverage-report/*
-          git commit -m "Update frontend coverage report" || echo "No changes to commit"
-          git push --force "https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages
-        if: success()

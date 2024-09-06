@@ -76,4 +76,4 @@ jobs:
             -Dsonar.projectKey=bobapp_bobapp-frontend
             -Dsonar.organization=bobapp
             -Dsonar.sources=./front
-            -Dsonar.coverage.jacoco.xmlReportPaths=coverage/bobapp
+            -Dsonar.coverage.lcov.reportPaths=coverage/lcov-report/index.html

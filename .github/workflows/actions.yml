@@ -30,6 +30,13 @@ jobs:
         run: mvn jacoco:report
         working-directory: ./back
 
+      - name: SonarQube Scan Backend
+        env:
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: mvn sonar:sonar -Dsonar.projectKey=backend-project -Dsonar.sources=src/main -Dsonar.tests=src/test -Dsonar.java.binaries=target/classes
+        working-directory: ./back
+
       - name: Upload Coverage Report
         uses: actions/upload-artifact@v4
         with:

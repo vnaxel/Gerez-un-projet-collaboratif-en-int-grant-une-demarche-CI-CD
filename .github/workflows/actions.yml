@@ -30,11 +30,13 @@ jobs:
         run: mvn jacoco:report
         working-directory: ./back
 
-      - name: SonarQube Scan Backend
+      - name: Build and analyze backend with SonarCloud
         env:
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed for SonarCloud PR analysis
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn sonar:sonar -Dsonar.projectKey=backend-project -Dsonar.sources=src/main -Dsonar.tests=src/test -Dsonar.java.binaries=target/classes
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+               -Dsonar.projectKey=bobapp_bobapp-backend \
+               -Dsonar.organization=<your-organization>
         working-directory: ./back
 
       - name: Upload Coverage Report

@@ -73,6 +73,18 @@ jobs:
       - run: npm ci
         working-directory: ./front
 
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_FRONTEND_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=bobapp_bobapp-frontend
+            -Dsonar.organization=bobapp
+            -Dsonar.sources=./front/src/app
+            -Dsonar.javascript.lcov.reportPaths=./front/coverage/bobapp/lcov.info
+
       - run: npm run test:prod -- --code-coverage
         working-directory: ./front
 
@@ -98,15 +110,3 @@ jobs:
           git commit -m "Update frontend coverage report" || echo "No changes to commit"
           git push --force "https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages
         if: success()
-
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_FRONTEND_TOKEN }}
-        with:
-          args: >
-            -Dsonar.projectKey=bobapp_bobapp-frontend
-            -Dsonar.organization=bobapp
-            -Dsonar.sources=./front/src/app
-            -Dsonar.javascript.lcov.reportPaths=./front/coverage/bobapp/lcov.info

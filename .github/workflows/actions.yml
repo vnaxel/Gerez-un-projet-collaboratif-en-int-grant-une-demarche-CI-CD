@@ -75,5 +75,9 @@ jobs:
           args: >
             -Dsonar.projectKey=bobapp_bobapp-frontend
             -Dsonar.organization=bobapp
-            -Dsonar.sources=./front
-            -Dsonar.coverage.lcov.reportPaths=./front/coverage/bobapp/lcov.info
+            -Dsonar.sources=./front/src
+            -Dsonar.tests=src
+            -Dsonar.exclusions=**/*.spec.ts,**/*test.ts,**/*.js
+            -Dsonar.test.inclusions=**/*.spec.ts,**/*test.ts
+            -Dsonar.coverage.exclusions=**/*.js,src/main.ts,src/polyfills.ts,**/*environment*.ts,**/*module.ts,**/app.config.ts,**/app.routes.ts
+            -Dsonar.javascript.lcov.reportPaths=./coverage/bobapp/lcov.info

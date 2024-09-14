@@ -27,7 +27,7 @@ jobs:
         run: mvn compile
         working-directory: ./back
 
-      - name: run tests
+      - name: Run tests
         run: mvn test
         working-directory: ./back
 

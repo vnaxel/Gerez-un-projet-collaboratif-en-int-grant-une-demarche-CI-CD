@@ -23,8 +23,12 @@ jobs:
           distribution: 'temurin'
 
 
-      - name: Build and run tests
-        run: mvn clean verify
+      - name: Build project
+        run: mvn compile
+        working-directory: ./back
+
+      - name: run tests
+        run: mvn test
         working-directory: ./back
 
       - name: Generate Coverage Report
